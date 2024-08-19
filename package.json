@@ -1,0 +1,19 @@
+{
+  "name": "own3d-sdk",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "vite": "^5.3.3"
+  },
+  "dependencies": {
+    "@own3d/ext-types": "github:own3d/ext-types",
+    "axios": "^1.7.2"
+  }
+}
