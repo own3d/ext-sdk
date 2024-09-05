@@ -1,8 +1,19 @@
-import {Extension} from "../types.ts";
+import {Extension} from "../types";
 
-export function usePubSub(_extension: Extension) {
+export function usePubSub(extension: Extension) {
     return {
-        publish: (_event: string, _data: any) => {},
-        subscribe: (_event: string, _callback: (data: any) => void) => {},
+        publish: async (event: string, data: any) => {
+            await extension.axios.post('https://ext.own3d.pro/v1/pubsub', {
+                event,
+                data,
+            })
+        },
+        subscribe: (event: string, callback: (data: any) => void) => {
+            extension.on('pubsub', (data) => {
+                if (data.event === event) {
+                    callback(data.data)
+                }
+            })
+        },
     }
 }

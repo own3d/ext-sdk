@@ -1,4 +1,4 @@
-import {Extension} from "../types.ts";
+import { Extension } from '../types'
 
 export function useIpc(extension: Extension) {
     const send = function (channel: string, payload: any) {

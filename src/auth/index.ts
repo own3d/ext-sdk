@@ -1,5 +1,4 @@
-import {Authorized} from "@own3d/ext-types";
-import {Extension} from "../types.ts";
+import { Authorized, Extension } from '../types'
 
 export function useAuth(extension: Extension) {
     const onAuthorized = (authCallback: (auth: Authorized) => void): void => {

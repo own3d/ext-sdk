@@ -1,6 +1,5 @@
-import axios, {AxiosResponse} from "axios";
-import {Extension} from "../types.ts";
-import {ConfigSegmentKey, ConfigSegments, JsonObject} from "@own3d/ext-types";
+import axios, { AxiosResponse } from 'axios'
+import { ConfigSegmentKey, ConfigSegments, Extension, JsonObject } from '../types'
 
 export function useRemoteConfig(extension: Extension) {
     const _axios = axios.create({

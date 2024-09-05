@@ -1,4 +1,4 @@
-import {Extension} from "../types.ts";
+import {Extension} from "../types";
 
 export function useSocket(extension: Extension) {
     const on = (event: string, callback: (data: any) => void): void => {

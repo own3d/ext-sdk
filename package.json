@@ -1,19 +1,56 @@
 {
-  "name": "own3d-sdk",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@own3d/sdk",
+  "version": "0.0.14",
   "type": "module",
+  "exports": {
+    "./auth": {
+      "types": "./auth/index.d.ts",
+      "default": "./auth/index.js"
+    },
+    "./coins": {
+      "types": "./coins/index.d.ts",
+      "default": "./coins/index.js"
+    },
+    "./context": {
+      "types": "./context/index.d.ts",
+      "default": "./context/index.js"
+    },
+    "./extension": {
+      "types": "./extension/index.d.ts",
+      "default": "./extension/index.js"
+    },
+    "./ipc": {
+      "types": "./ipc/index.d.ts",
+      "default": "./ipc/index.js"
+    },
+    "./pubsub": {
+      "types": "./pubsub/index.d.ts",
+      "default": "./pubsub/index.js"
+    },
+    "./remote-config": {
+      "types": "./remote-config/index.d.ts",
+      "default": "./remote-config/index.js"
+    },
+    "./socket": {
+      "types": "./socket/index.d.ts",
+      "default": "./socket/index.js"
+    },
+    "./types": {
+      "types": "./types.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "release": "tsx make-release.ts"
   },
   "devDependencies": {
     "typescript": "^5.5.3",
     "vite": "^5.3.3"
   },
   "dependencies": {
-    "@own3d/ext-types": "github:own3d/ext-types",
-    "axios": "^1.7.2"
+    "axios": "^1.7.2",
+    "glob": "^11.0.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "vite-plugin-dts": "^4.0.3"
   }
 }

@@ -1,5 +1,4 @@
-import {Extension} from "../types.ts";
-import {Metadata, Transaction} from "@own3d/ext-types";
+import { Extension, Metadata, Transaction } from '../types'
 
 export function useCoins(extension: Extension) {
     const getProducts = function () {

@@ -1,5 +1,4 @@
-import {Extension} from "../types.ts";
-import {Context} from "@own3d/ext-types";
+import { Context, Extension } from '../types'
 
 export function useContext(extension: Extension) {
     const onContext = (contextCallback: <T extends Partial<Context>>(context: T, changed: ReadonlyArray<keyof T>) => void): void => {
