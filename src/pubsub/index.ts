@@ -9,8 +9,8 @@ export function usePubSub(extension: Extension) {
             })
         },
         subscribe: (event: string, callback: (data: any) => void) => {
-            extension.on('socket', ({event, data}) => {
-                if (event === 'pubsub' && data.event === event) {
+            extension.on('socket', ({event: _event, data}) => {
+                if (_event === 'pubsub' && data.event === event) {
                     callback(data)
                 }
             })
