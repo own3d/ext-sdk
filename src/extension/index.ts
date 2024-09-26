@@ -1,6 +1,6 @@
-import axios from "axios";
-import {useAuth} from "../auth";
-import { Authorized, Extension, User } from '../types'
+import axios from 'axios'
+import { useAuth } from '../auth/index.ts'
+import { Authorized, Extension, User } from '../types.ts'
 
 let _callbackCounter = 0
 let _observers: { [key: string]: ((data: any) => void)[] } = {}
@@ -53,11 +53,13 @@ function postMessage(event: string, data: any, callback?: (data: any) => void) {
         message.callbackId = callbackId
     }
 
+    // @ts-ignore
     parent.postMessage(message, '*')
 }
 
-window.addEventListener('message', function (e) {
+window.addEventListener('message', function (e: any) {
     // Check if the message originated from the same origin
+    // @ts-ignore
     if (e.origin === window.origin) {
         // Ignore the message
         return
@@ -87,7 +89,7 @@ const extension = {
     emit,
     axios: _axios,
     state: _state,
-    user: {}
+    user: {},
 } as Extension
 
 const {onAuthorized} = useAuth(extension)
@@ -100,8 +102,8 @@ onAuthorized((data: Authorized) => {
     extension.user = {...extension.user, ...data} as User
 })
 
-const initializeExtension = () => {
-    return extension;
-};
+const initializeExtension = (): Extension => {
+    return extension
+}
 
-export {initializeExtension};
+export { initializeExtension }

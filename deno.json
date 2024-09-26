@@ -1,0 +1,23 @@
+{
+  "name": "@own3d/sdk",
+  "version": "0.0.16",
+  "license": "MIT",
+  "tasks": {
+    "publish-dry": "deno publish --dry-run"
+  },
+  "exports": {
+    "./auth": "./src/auth/index.ts",
+    "./coins": "./src/coins/index.ts",
+    "./context": "./src/context/index.ts",
+    "./extension": "./src/extension/index.ts",
+    "./ipc": "./src/ipc/index.ts",
+    "./pubsub": "./src/pubsub/index.ts",
+    "./remote-config": "./src/remote-config/index.ts",
+    "./socket": "./src/socket/index.ts",
+    "./types": "./src/types.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "axios": "npm:axios@1.7.2"
+  }
+}

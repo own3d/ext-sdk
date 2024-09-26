@@ -1,6 +1,11 @@
-import { Extension } from '../types'
+import { Extension } from '../types.ts'
 
-export function useIpc(extension: Extension) {
+interface IpcComposable {
+    send: (channel: string, payload: any) => void,
+    invoke: (channel: string, payload: any) => Promise<any>
+}
+
+export function useIpc(extension: Extension): IpcComposable {
     const send = function (channel: string, payload: any) {
         extension.postMessage('ipc', {channel, payload})
     }
@@ -12,6 +17,6 @@ export function useIpc(extension: Extension) {
     }
     return {
         send,
-        invoke
+        invoke,
     }
 }

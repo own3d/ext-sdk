@@ -1,6 +1,14 @@
-import { Extension, Metadata, Transaction } from '../types'
+import { Extension, Metadata, Transaction } from '../types.ts'
 
-export function useCoins(extension: Extension) {
+interface CoinsComposable {
+    getProducts: () => Promise<any>,
+    showCoinsBalance: () => void,
+    useCoins: (sku: string, metadata: Metadata) => Promise<Transaction>,
+    onTransactionComplete: (callback: (transaction: Transaction) => void) => void,
+    onTransactionCancelled: (callback: (transaction: Transaction) => void) => void
+}
+
+export function useCoins(extension: Extension): CoinsComposable {
     const getProducts = function () {
         return new Promise((resolve) => {
             extension.postMessage('get-products', {}, (data) => resolve(data))

@@ -1,7 +1,12 @@
 import axios, { AxiosResponse } from 'axios'
-import { ConfigSegmentKey, ConfigSegments, Extension, JsonObject } from '../types'
+import { ConfigSegmentKey, ConfigSegments, Extension, JsonObject } from '../types.ts'
 
-export function useRemoteConfig(extension: Extension) {
+interface RemoteConfigComposable {
+    getSegments: () => Promise<ConfigSegments>,
+    setSegment: (segment: ConfigSegmentKey, content: JsonObject) => Promise<void>
+}
+
+export function useRemoteConfig(extension: Extension): RemoteConfigComposable {
     const _axios = axios.create({
         baseURL: 'https://ext.own3d.pro/',
         headers: {
