@@ -5,14 +5,14 @@ provides some helper functions to make the development of extensions easier.
 
 ## Install from the command line:
 
+Our package will be released on [JSR](https://jsr.io/). You can install it using the following command:
+
 ```bash
-npm install @own3d/sdk
-```
+# deno
+deno add jsr:@own3d/sdk
 
-Sometimes you need to add the following line to your `.npmrc` file, to route package requests to the right registry:
-
-```text
-@own3d:registry=https://npm.pkg.github.com
+# npm (use any of npx, yarn dlx, pnpm dlx, or bunx)
+npx jsr add @own3d/sdk
 ```
 
 ## Example Usage
