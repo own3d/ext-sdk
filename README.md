@@ -35,8 +35,3 @@ onAuthorized(async (user) => {
 ## Documentation
 
 Our full documentation can be found [here](https://dev.own3d.tv/docs/extensions/sdk.html).
-
-## Publish to GitHub
-
-1. Bump version in `package.json`
-2. Run `npm run release`
