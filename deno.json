@@ -1,6 +1,6 @@
 {
   "name": "@own3d/sdk",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "license": "proprietary",
   "tasks": {
     "publish-dry": "deno publish --dry-run"
