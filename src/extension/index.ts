@@ -1,9 +1,11 @@
 import axios from 'axios'
 import { useAuth } from '../auth/index.ts'
-import { Authorized, Extension, User } from '../types.ts'
+import type { Authorized, Extension, User } from '../types.ts'
 
 let _callbackCounter = 0
+// deno-lint-ignore prefer-const
 let _observers: { [key: string]: ((data: any) => void)[] } = {}
+// deno-lint-ignore prefer-const
 let _callbacks: { [key: string]: (data: any) => void } = {}
 const _state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 const _axios = axios.create({
@@ -102,6 +104,12 @@ onAuthorized((data: Authorized) => {
     extension.user = {...extension.user, ...data} as User
 })
 
+/**
+ * Returns the current extension instance. In future versions, this method will be used to initialize the
+ * extension instance when working without the supervisor.
+ *
+ * @returns The extension instance
+ */
 const initializeExtension = (): Extension => {
     return extension
 }
