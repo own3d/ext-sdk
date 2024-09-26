@@ -5,7 +5,7 @@ provides some helper functions to make the development of extensions easier.
 
 ## Install from the command line:
 
-Our package will be released on [JSR](https://jsr.io/). You can install it using the following command:
+Our package will be released on [JSR](https://jsr.io/@own3d/sdk). You can install it using the following command:
 
 ```bash
 # deno
