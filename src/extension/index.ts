@@ -1,6 +1,7 @@
 import axios from 'axios'
-import { useAuth } from '../auth/index.ts'
-import type { Authorized, Extension, User } from '../types.ts'
+import { useAuth } from '../auth/index'
+import type { Authorized, Extension, User } from '../types'
+import { JSONRPCClient, JSONRPCServer, JSONRPCServerAndClient } from 'json-rpc-2.0'
 
 let _callbackCounter = 0
 // deno-lint-ignore prefer-const
@@ -14,6 +15,20 @@ const _axios = axios.create({
         'Content-Type': 'application/json',
     },
 })
+const _jsonRpc = new JSONRPCServerAndClient(
+    new JSONRPCServer(),
+    new JSONRPCClient((request) => {
+        // @ts-ignore
+        parent.postMessage(request, '*')
+        return Promise.resolve()
+    }),
+)
+
+/**
+ * This variable is used to determine whether the extension should use JSON-RPC for communication.
+ * In future versions, this variable will be set to true by default.
+ */
+const useJsonRpc: boolean = false
 
 function emit(event: string, data: any) {
     if (event in _observers) {
@@ -43,30 +58,46 @@ function once(event: string, callback: (data: any) => void) {
 }
 
 function postMessage(event: string, data: any, callback?: (data: any) => void) {
-    const message: {
-        event: string;
-        data: any;
-        callbackId: string | null;
-    } = {event, data, callbackId: null}
+    if (useJsonRpc) {
+        if (callback) {
+            _jsonRpc.request(event, data).then((result) => callback(result))
+        } else {
+            _jsonRpc.notify(event, data)
+        }
+    } else {
+        const message: {
+            event: string;
+            data: any;
+            callbackId: string | null;
+        } = {event, data, callbackId: null}
 
-    if (callback) {
-        const callbackId = 'cb_' + (++_callbackCounter)
-        _callbacks[callbackId] = callback
-        message.callbackId = callbackId
+        if (callback) {
+            const callbackId = 'cb_' + (++_callbackCounter)
+            _callbacks[callbackId] = callback
+            message.callbackId = callbackId
+        }
+
+        // @ts-ignore
+        parent.postMessage(message, '*')
     }
-
-    // @ts-ignore
-    parent.postMessage(message, '*')
 }
 
-window.addEventListener('message', function (e: any) {
+window.addEventListener('message', async function (e: any) {
     // Check if the message originated from the same origin
     // @ts-ignore
     if (e.origin === window.origin) {
         // Ignore the message
         return
     }
+    // Handle JSON-RPC messages
+    if (typeof e.data === 'object' && 'jsonrpc' in e.data) {
+        await _jsonRpc.receiveAndSend(e.data)
+        return
+    } else {
+        console.log('not jsonrpc', e.data)
+    }
 
+    // Handle legacy messages
     const {event, data, callbackId} = e.data
     if (event === 'callback' && _callbacks[callbackId]) {
         _callbacks[callbackId](data)
@@ -77,11 +108,17 @@ window.addEventListener('message', function (e: any) {
 })
 
 window.addEventListener('beforeunload', function () {
+    _jsonRpc.rejectAllPendingRequests(
+        'Extension is being unloaded',
+    )
     postMessage('beforeunload', {state: _state})
 })
 
 window.addEventListener('load', function () {
-    postMessage('load', {state: _state})
+    postMessage('load', {state: _state, version: 2, jsonrpc: useJsonRpc})
+    _jsonRpc
+        .request('echo', {foo: 'bar'})
+        .then((result) => console.log(result))
 })
 
 const extension = {
@@ -110,8 +147,6 @@ onAuthorized((data: Authorized) => {
  *
  * @returns The extension instance
  */
-const initializeExtension = (): Extension => {
+export const initializeExtension = (): Extension => {
     return extension
 }
-
-export { initializeExtension }
