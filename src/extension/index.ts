@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useAuth } from '../auth/index'
-import type { Authorized, Context, Extension, User } from '../types'
+import type { Authorized, Context, Extension } from '../types'
 import { JSONRPCClient, JSONRPCServer, JSONRPCServerAndClient } from 'json-rpc-2.0'
 import { useContext } from '../context'
 
@@ -139,7 +139,7 @@ const {onContext} = useContext(extension)
  */
 onAuthorized((data: Authorized) => {
     _axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
-    extension.user = {...extension.user, ...data} as User
+    extension.user = {...extension.user, ...data} as Authorized
 })
 
 /**

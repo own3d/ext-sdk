@@ -6,7 +6,7 @@ export interface Extension {
     once: (event: string, callback: (data: any) => void) => void;
     postMessage: (event: string, data: any, callback?: (data: any) => void) => void;
     emit: (event: string, data: any) => void;
-    user?: User;
+    user?: Authorized;
     context?: Context;
     axios: any;
     state: any;
@@ -53,15 +53,11 @@ export type Theme = 'dark' | 'light' | 'auto';
 
 /**
  * Represents a user object.
+ *
+ * @deprecated Use Authorized instead.
  */
-export interface User {
-    channel_id: string;
-    client_id: string;
-    client_token: string;
-    mode: Mode;
-    scopes: string[];
-    token: string;
-    user_id: string;
+export interface User extends Authorized {
+    // Deprecated
 }
 
 /**
@@ -133,6 +129,7 @@ export interface Authorized {
     user_id: string;
     scopes: string[];
     token: string;
+    mode: Mode;
 }
 
 /**
@@ -143,6 +140,7 @@ export interface Context {
     language: string;
     mode: Mode;
     theme: Theme;
+
     [key: string]: any;
 }
 
