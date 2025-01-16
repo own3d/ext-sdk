@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { useAuth } from '../auth/index'
-import type { Authorized, Context, Extension } from '../types'
+import { useAuth } from '../auth/index.ts'
+import { useContext } from '../context/index.ts'
+import type { Authorized, Context, Extension } from '../types.ts'
 import { JSONRPCClient, JSONRPCServer, JSONRPCServerAndClient } from 'json-rpc-2.0'
-import { useContext } from '../context'
 
 let _callbackCounter = 0
 // deno-lint-ignore prefer-const
@@ -145,9 +145,9 @@ onAuthorized((data: Authorized) => {
 /**
  * Internal listener for the context event, which is triggered by the extension
  */
-onContext((context: Partial<Context>, changed: ReadonlyArray<keyof Context>) => {
+onContext((context, changed) => {
     for (const key of changed) {
-        extension.context = {...extension.context, [key]: context[key]}
+        extension.context = {...extension.context, [key]: context[key]} as Context
     }
 })
 

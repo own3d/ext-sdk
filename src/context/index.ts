@@ -30,7 +30,7 @@ export function useContext(extension: Extension): ContextComposable {
         options?: { immediate: boolean } | undefined,
     ): void => {
         if (options?.immediate) {
-            contextCallback(extension.context, Object.keys(extension.context) as (keyof Context)[])
+            contextCallback(extension.context as Context, Object.keys(extension.context as Context) as (keyof Context)[])
         }
         extension.on('context', (data) => contextCallback(data.context, data.changed))
     }

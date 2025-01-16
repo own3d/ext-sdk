@@ -5,11 +5,13 @@
     "sourceMap": true,
     "strict": false,
     "declaration": true,
+    "allowImportingTsExtensions": true,
     "moduleResolution": "node",
     "outDir": "dist",
+    "noEmit": true,
     "types": [
       "node"
-    ],
+    ]
   },
   "exclude": [
     "dist",
