@@ -1,6 +1,6 @@
 {
   "name": "@own3d/sdk",
-  "version": "0.0.20",
+  "version": "0.0.30",
   "type": "module",
   "exports": {
     "./auth": {
@@ -38,6 +38,14 @@
     "./socket": {
       "types": "./socket/index.d.ts",
       "default": "./socket/index.js"
+    },
+    "./support": {
+      "types": "./support/index.d.ts",
+      "default": "./support/index.js"
+    },
+    "./vue": {
+      "types": "./vue/index.d.ts",
+      "default": "./vue/index.js"
     },
     "./types": {
       "types": "./types.ts"

@@ -1,7 +1,10 @@
 import type { Context, Extension } from '../types.ts'
 
 interface ContextComposable {
-    onContext: (contextCallback: <T extends Partial<Context>>(context: T, changed: ReadonlyArray<keyof T>) => void) => void
+    onContext: (
+        contextCallback: <T extends Partial<Context>>(context: T, changed: ReadonlyArray<keyof T>) => void,
+        options?: { immediate: boolean } | undefined,
+    ) => void
 }
 
 /**
@@ -22,11 +25,17 @@ interface ContextComposable {
  * })
  */
 export function useContext(extension: Extension): ContextComposable {
-    const onContext = (contextCallback: <T extends Partial<Context>>(context: T, changed: ReadonlyArray<keyof T>) => void): void => {
-        extension.on('context', (data) => contextCallback(data.context, data.changed));
+    const onContext = (
+        contextCallback: <T extends Partial<Context>>(context: T, changed: ReadonlyArray<keyof T>) => void,
+        options?: { immediate: boolean } | undefined,
+    ): void => {
+        if (options?.immediate) {
+            contextCallback(extension.context, Object.keys(extension.context) as (keyof Context)[])
+        }
+        extension.on('context', (data) => contextCallback(data.context, data.changed))
     }
 
     return {
-        onContext
+        onContext,
     }
 }

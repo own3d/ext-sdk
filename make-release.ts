@@ -12,9 +12,11 @@ const __dirname = path.dirname(__filename)
 // Delete dist folder
 const dist = path.resolve(__dirname, 'dist')
 
-if (fs.existsSync(dist)) {
-    fs.rmdirSync(dist, {recursive: true})
+if (process.argv.includes('--publish')) {
+    if (fs.existsSync(dist)) {
+        fs.rmdirSync(dist, {recursive: true})
         console.log('dist folder deleted')
+    }
 }
 
 // run tsc in sync
@@ -42,12 +44,14 @@ exec('tsc', (error, stdout, stderr) => {
         .catch((error) => console.error(error))
 
     // publish to npm
-    exec('npm publish', {cwd: path.resolve(__dirname, 'dist')}, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`exec error: ${error}`)
-            return
-        }
-        console.log(stdout)
-    })
+    if (process.argv.includes('--publish')) {
+        exec('npm publish', {cwd: path.resolve(__dirname, 'dist')}, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`exec error: ${error}`)
+                return
+            }
+            console.log(stdout)
+        })
+    }
 })
 

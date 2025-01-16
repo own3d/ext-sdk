@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { useAuth } from '../auth/index'
-import type { Authorized, Extension, User } from '../types'
+import type { Authorized, Context, Extension, User } from '../types'
 import { JSONRPCClient, JSONRPCServer, JSONRPCServerAndClient } from 'json-rpc-2.0'
+import { useContext } from '../context'
 
 let _callbackCounter = 0
 // deno-lint-ignore prefer-const
@@ -93,8 +94,6 @@ window.addEventListener('message', async function (e: any) {
     if (typeof e.data === 'object' && 'jsonrpc' in e.data) {
         await _jsonRpc.receiveAndSend(e.data)
         return
-    } else {
-        console.log('not jsonrpc', e.data)
     }
 
     // Handle legacy messages
@@ -117,7 +116,7 @@ window.addEventListener('beforeunload', function () {
 window.addEventListener('load', function () {
     postMessage('load', {state: _state, version: 2, jsonrpc: useJsonRpc})
     _jsonRpc
-        .request('echo', {foo: 'bar'})
+        .request('echo', {text: 'jsonrpc echo test'})
         .then((result) => console.log(result))
 })
 
@@ -129,9 +128,11 @@ const extension = {
     axios: _axios,
     state: _state,
     user: {},
+    context: {},
 } as Extension
 
 const {onAuthorized} = useAuth(extension)
+const {onContext} = useContext(extension)
 
 /**
  * Internal listener for the authorization event, which is triggered by the extension
@@ -139,6 +140,15 @@ const {onAuthorized} = useAuth(extension)
 onAuthorized((data: Authorized) => {
     _axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
     extension.user = {...extension.user, ...data} as User
+})
+
+/**
+ * Internal listener for the context event, which is triggered by the extension
+ */
+onContext((context: Partial<Context>, changed: ReadonlyArray<keyof Context>) => {
+    for (const key of changed) {
+        extension.context = {...extension.context, [key]: context[key]}
+    }
 })
 
 /**
