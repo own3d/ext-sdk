@@ -3,6 +3,7 @@ import type { Extension } from '../types.ts'
 interface IpcComposable {
     send: (channel: string, payload: any) => void,
     invoke: (channel: string, payload: any) => Promise<any>
+    on: (channel: string, callback: (payload: any) => void) => void
 }
 
 /**
@@ -36,8 +37,18 @@ export function useIpc(extension: Extension): IpcComposable {
             extension.postMessage('ipc', {channel, payload}, (data) => resolve(data))
         })
     }
+
+    const on = function (channel: string, callback: (payload: any) => void) {
+        extension.on('ipc', ({channel: _channel, payload}) => {
+            if (_channel === channel) {
+                callback(payload)
+            }
+        })
+    }
+
     return {
         send,
         invoke,
+        on,
     }
 }

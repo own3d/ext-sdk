@@ -3,6 +3,9 @@ import { useIpc } from '../ipc/index'
 
 interface SceneBuilderComposable {
     setInteractive: (interactive: boolean) => void
+    onClick: (inputId: string, callback: () => void) => void
+    setValues: (values: Record<string, string>) => Promise<void>
+    patchValues: (values: Record<string, string>) => Promise<void>
 }
 
 /**
@@ -21,13 +24,28 @@ interface SceneBuilderComposable {
  * setInteractive(true)
  */
 export function useSceneBuilder(extension: Extension): SceneBuilderComposable {
-    const {send} = useIpc(extension)
+    const {send, invoke, on} = useIpc(extension)
 
     const setInteractive = function (interactive: boolean) {
         send('scene-builder.own3d.pro/interactive', {interactive})
     }
 
+    const onClick = function (inputId: string, callback: () => void) {
+        on(`scene-builder.own3d.pro/click/${inputId}`, callback)
+    }
+
+    const setValues = function (values: Record<string, string>): Promise<void> {
+        return invoke('scene-builder.own3d.pro/set-values', {values})
+    }
+
+    const patchValues = function (values: Record<string, string>): Promise<void> {
+        return invoke('scene-builder.own3d.pro/patch-values', {values})
+    }
+
     return {
-        setInteractive
+        setInteractive,
+        onClick,
+        setValues,
+        patchValues,
     }
 }

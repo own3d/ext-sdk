@@ -5,17 +5,16 @@
     "sourceMap": true,
     "strict": false,
     "declaration": true,
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
+    "emitDeclarationOnly": false,
     "moduleResolution": "node",
     "outDir": "dist",
-    "noEmit": true,
+    "noEmit": false,
     "types": [
       "node"
     ]
   },
-  "exclude": [
-    "dist",
-    "node_modules",
-    "make-release.ts"
+  "include": [
+    "src",
   ]
 }

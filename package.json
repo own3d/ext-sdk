@@ -23,6 +23,10 @@
       "types": "./ipc/index.d.ts",
       "default": "./ipc/index.js"
     },
+    "./notifications": {
+      "types": "./notifications/index.d.ts",
+      "default": "./notifications/index.js"
+    },
     "./pubsub": {
       "types": "./pubsub/index.d.ts",
       "default": "./pubsub/index.js"

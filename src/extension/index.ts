@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { useAuth } from '../auth/index.ts'
-import { useContext } from '../context/index.ts'
+import { useAuth } from '../auth/index'
+import { useContext } from '../context/index'
 import type { Authorized, Context, Extension } from '../types.ts'
 import { JSONRPCClient, JSONRPCServer, JSONRPCServerAndClient } from 'json-rpc-2.0'
 
