@@ -32,7 +32,7 @@ export type JsonValue = string | number | boolean | null | JsonArray | JsonObjec
 /**
  * Represents a configuration segment key.
  */
-export type ConfigSegmentKey = 'creator' | 'developer' | 'global';
+export type ConfigSegmentKey = 'broadcaster' | 'developer' | 'global';
 
 /**
  * Represents configuration segments.
