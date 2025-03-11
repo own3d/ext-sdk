@@ -34,7 +34,7 @@ export function useSubscription(extension: Extension): SubscriptionComposable {
   const { send } = useIpc(extension)
 
   function showProSubscriptionUpsell(options: any) : void {
-    send('subscription.own3d.pro/show-pro-sub-upsell', options)
+    send('own3d.pro/show-pro-sub-upsell', options)
   }
 
   return {
