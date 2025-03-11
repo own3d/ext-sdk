@@ -35,3 +35,9 @@ onAuthorized(async (user) => {
 ## Documentation
 
 Our full documentation can be found [here](https://dev.own3d.tv/docs/extensions/sdk.html).
+
+## Release Management (NPM only)
+
+1. Bump version; commit final changes
+2. Verify with `npx tsx make-release.ts`
+3. Final publish with `npx tsx make-release.ts --publish`
