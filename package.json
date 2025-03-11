@@ -43,6 +43,10 @@
       "types": "./socket/index.d.ts",
       "default": "./socket/index.js"
     },
+    "./subscription": {
+      "types": "./subscription/index.d.ts",
+      "default": "./subscription/index.js"
+    },
     "./support": {
       "types": "./support/index.d.ts",
       "default": "./support/index.js"
