@@ -1,7 +1,8 @@
-import { initializeExtension } from '../extension/index.js'
+import { App } from "vue";
+import { initializeExtension } from "../extension/index.js";
 
 interface Plugin {
-    install: (app: any, options: any) => void;
+  install: (app: App) => void;
 }
 
 /**
@@ -24,14 +25,14 @@ interface Plugin {
  * ```
  */
 export function createExtension(): Plugin {
-    const extension = initializeExtension()
+  const extension = initializeExtension();
 
-    const install = (app: any, _options: any): void => {
-        app.config.globalProperties.$extension = extension
-        app.provide('extension', extension)
-    }
+  const install = (app: App): void => {
+    app.config.globalProperties.$extension = extension;
+    app.provide("extension", extension);
+  };
 
-    return {
-        install,
-    }
+  return {
+    install,
+  };
 }
