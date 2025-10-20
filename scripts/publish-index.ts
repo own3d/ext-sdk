@@ -37,6 +37,7 @@ const VECTOR_STORE_ID = process.env.SDK_VECTOR_STORE_ID;
         await client.vectorStores.files.delete(file.id, {
             vector_store_id: store.id
         });
+        await client.files.delete(file.id);
     }
     console.log("Vector store cleared.\n");
     // --- 👆 End wipe block 👆 ---
