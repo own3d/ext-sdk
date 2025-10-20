@@ -1,13 +1,13 @@
 {
   "name": "@own3d/sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "proprietary",
   "tasks": {
     "publish-dry": "deno publish --dry-run"
   },
   "exports": {
     "./package.json": "./package.json",
-    ".": "./src/index.ts"
+    ".": "./index.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
