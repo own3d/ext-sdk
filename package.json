@@ -1,64 +1,13 @@
 {
   "name": "@own3d/sdk",
-  "version": "0.0.34",
+  "version": "0.1.0",
   "type": "module",
   "exports": {
-    "./auth": {
-      "types": "./auth/index.d.ts",
-      "default": "./auth/index.js"
-    },
-    "./coins": {
-      "types": "./coins/index.d.ts",
-      "default": "./coins/index.js"
-    },
-    "./context": {
-      "types": "./context/index.d.ts",
-      "default": "./context/index.js"
-    },
-    "./extension": {
-      "types": "./extension/index.d.ts",
-      "default": "./extension/index.js"
-    },
-    "./ipc": {
-      "types": "./ipc/index.d.ts",
-      "default": "./ipc/index.js"
-    },
-    "./notifications": {
-      "types": "./notifications/index.d.ts",
-      "default": "./notifications/index.js"
-    },
-    "./pubsub": {
-      "types": "./pubsub/index.d.ts",
-      "default": "./pubsub/index.js"
-    },
-    "./remote-config": {
-      "types": "./remote-config/index.d.ts",
-      "default": "./remote-config/index.js"
-    },
-    "./scene-builder": {
-      "types": "./scene-builder/index.d.ts",
-      "default": "./scene-builder/index.js"
-    },
-    "./socket": {
-      "types": "./socket/index.d.ts",
-      "default": "./socket/index.js"
-    },
-    "./subscription": {
-      "types": "./subscription/index.d.ts",
-      "default": "./subscription/index.js"
-    },
-    "./support": {
-      "types": "./support/index.d.ts",
-      "default": "./support/index.js"
-    },
-    "./vue": {
-      "types": "./vue/index.d.ts",
-      "default": "./vue/index.js"
-    },
-    "./types": {
-      "types": "./types.ts"
-    },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
   },
   "scripts": {
     "release": "tsx make-release.ts",
@@ -66,6 +15,7 @@
   },
   "devDependencies": {
     "@types/webfontloader": "^1.6.38",
+    "@types/node": "^20.14.0",
     "rollup-plugin-copy": "^3.5.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",

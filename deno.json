@@ -1,21 +1,13 @@
 {
   "name": "@own3d/sdk",
-  "version": "0.0.30",
+  "version": "0.1.0",
   "license": "proprietary",
   "tasks": {
     "publish-dry": "deno publish --dry-run"
   },
   "exports": {
-    "./auth": "./src/auth/index.ts",
-    "./coins": "./src/coins/index.ts",
-    "./context": "./src/context/index.ts",
-    "./extension": "./src/extension/index.ts",
-    "./ipc": "./src/ipc/index.ts",
-    "./pubsub": "./src/pubsub/index.ts",
-    "./remote-config": "./src/remote-config/index.ts",
-    "./socket": "./src/socket/index.ts",
-    "./subscription": "./src/subscription/index.ts",
-    "./types": "./src/types.ts"
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",

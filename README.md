@@ -20,12 +20,11 @@ npx jsr add @own3d/sdk
 Here is a quick example on how to use the SDK:
 
 ```typescript
-import { initializeExtension } from '@own3d/sdk/extension'
-import { useAuth } from '@own3d/sdk/auth'
+import { initializeExtension, useAuth } from '@own3d/sdk'
 
 const extension = initializeExtension()
 
-const {onAuthorized} = useAuth(extension)
+const { onAuthorized } = useAuth(extension)
 
 onAuthorized(async (user) => {
     console.log(user)
