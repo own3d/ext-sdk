@@ -16,13 +16,21 @@
  * ```
  */
 export interface Extension {
+    /** Register a listener for a named runtime event. */
     on: (event: string, callback: (data: any) => void) => void;
+    /** Register a one-time listener for the named event. */
     once: (event: string, callback: (data: any) => void) => void;
+    /** Send a message into the host runtime; optionally provide a callback for replies. */
     postMessage: (event: string, data: any, callback?: (data: any) => void) => void;
+    /** Emit a local event to SDK observers. */
     emit: (event: string, data: any) => void;
+    /** Authenticated user information (populated after authorization). */
     user?: Authorized;
+    /** Runtime context provided by the host supervisor. */
     context?: Context;
+    /** Axios instance configured for the OWN3D API. */
     axios: any;
+    /** Internal state token used by the extension runtime. */
     state: any;
 }
 
@@ -68,6 +76,8 @@ export type ConfigSegmentKey = 'broadcaster' | 'developer' | 'global';
 
 /**
  * All remote configuration segments mapped by {@link ConfigSegmentKey}.
+ *
+ * Each segment is a JSON object (free-form key/value map).
  */
 export type ConfigSegments = {
     [key in ConfigSegmentKey]: JsonObject;
@@ -107,6 +117,7 @@ export interface User extends Authorized {
  * ```
  */
 export interface ProSubscription {
+    /** List of enabled feature keys for the subscription. */
     features: string[];
 }
 
@@ -114,7 +125,9 @@ export interface ProSubscription {
  * Cost expressed for a product or subscription.
  */
 export interface Cost {
+    /** Amount expressed in the given `type` currency. */
     amount: number;
+    /** Currently only 'coins' is supported. */
     type: 'coins';
 }
 
@@ -211,11 +224,16 @@ export interface Authorized {
  * ```
  */
 export interface Context {
+    /** The runtime environment name (for example: 'prod', 'staging'). */
     environment: string;
+    /** Language code in use (eg. 'en', 'de'). */
     language: string;
+    /** Running mode (see {@link Mode}). */
     mode: Mode;
+    /** Preferred theme (see {@link Theme}). */
     theme: Theme;
 
+    /** Additional provider-specific keys. */
     [key: string]: any;
 }
 
@@ -326,3 +344,4 @@ export interface NotifySub {
     notification: NotifySubNotification;
     event: NotifySubEventPayload;
 }
+
