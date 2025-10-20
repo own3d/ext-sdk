@@ -1,4 +1,4 @@
-import { initializeExtension } from '../extension'
+import { initializeExtension } from '../extension/index.js'
 
 interface Plugin {
     install: (app: any, options: any) => void;

@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { useAuth } from '../auth/index'
-import { useContext } from '../context/index'
+import { useAuth } from '../auth/index.js'
+import { useContext } from '../context/index.js'
 import type { Authorized, Context, Extension } from '../types.ts'
 import { JSONRPCClient, JSONRPCServer, JSONRPCServerAndClient } from 'json-rpc-2.0'
 
@@ -145,7 +145,8 @@ onAuthorized((data: Authorized) => {
 /**
  * Internal listener for the context event, which is triggered by the extension
  */
-onContext((context, changed) => {
+// Use a generic callback signature matching useContext's declared type
+onContext(<T extends Partial<Context>>(context: T, changed: ReadonlyArray<keyof T>) => {
     for (const key of changed) {
         extension.context = {...extension.context, [key]: context[key]} as Context
     }

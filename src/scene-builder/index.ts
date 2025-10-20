@@ -1,5 +1,5 @@
-import type { Extension } from '../types'
-import { useIpc } from '../ipc/index'
+import type { Extension } from '../types.js'
+import { useIpc } from '../ipc/index.js'
 
 export interface SceneBuilderComposable {
     setInteractive: (interactive: boolean) => Promise<void>

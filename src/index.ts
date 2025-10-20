@@ -15,19 +15,19 @@
  * const { publish } = usePubSub(extension)
  * ```
  */
-import * as auth from "./auth/index";
-import * as coins from "./coins/index";
-import * as context from "./context/index";
-import * as extension from "./extension/index";
-import * as ipc from "./ipc/index";
-import * as notifications from "./notifications/index";
-import * as pubsub from "./pubsub/index";
-import * as remoteConfig from "./remote-config/index";
-import * as sceneBuilder from "./scene-builder/index";
-import * as socket from "./socket/index";
-import * as subscription from "./subscription/index";
-import * as support from "./support/index";
-import * as vue from "./vue/index";
+import * as auth from "./auth/index.js";
+import * as coins from "./coins/index.js";
+import * as context from "./context/index.js";
+import * as extension from "./extension/index.js";
+import * as ipc from "./ipc/index.js";
+import * as notifications from "./notifications/index.js";
+import * as pubsub from "./pubsub/index.js";
+import * as remoteConfig from "./remote-config/index.js";
+import * as sceneBuilder from "./scene-builder/index.js";
+import * as socket from "./socket/index.js";
+import * as subscription from "./subscription/index.js";
+import * as support from "./support/index.js";
+import * as vue from "./vue/index.js";
 
 export {
   auth,
@@ -45,4 +45,4 @@ export {
   vue,
 };
 
-export * from "./types";
+export * from "./types.js";
