@@ -42,7 +42,7 @@ const VECTOR_STORE_ID = process.env.SDK_VECTOR_STORE_ID;
     // --- 👆 End wipe block 👆 ---
 
     // 2) Gather and upload markdown files
-    const dir = "dist/sdk-index";
+    const dir = "ai-dist/sdk-index";
     const files = listMarkdownFiles(dir);
     if (files.length === 0) {
         console.error(`No .md files found in ${dir}. Did you run the indexer?`);

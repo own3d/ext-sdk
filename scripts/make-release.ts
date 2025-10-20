@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename)
 const root = path.resolve(__dirname, '..')
 
 // Delete dist folder
-const dist = path.resolve(root, 'dist')
+const dist = path.resolve(root, 'ai-dist')
 
 if (process.argv.includes('--publish')) {
     if (fs.existsSync(dist)) {

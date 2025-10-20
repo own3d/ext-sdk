@@ -28,7 +28,7 @@ function readPkgVersion() {
 }
 
 const version = readPkgVersion();
-const outDir = "dist/sdk-index";
+const outDir = "ai-dist/sdk-index";
 fs.rmSync(outDir, { recursive: true, force: true });
 fs.mkdirSync(outDir, { recursive: true, force: true });
 
