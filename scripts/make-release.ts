@@ -9,8 +9,11 @@ import { copyFile } from 'fs/promises'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+// Determine project root (one level above scripts)
+const root = path.resolve(__dirname, '..')
+
 // Delete dist folder
-const dist = path.resolve(__dirname, 'dist')
+const dist = path.resolve(root, 'dist')
 
 if (process.argv.includes('--publish')) {
     if (fs.existsSync(dist)) {
@@ -20,7 +23,7 @@ if (process.argv.includes('--publish')) {
 }
 
 // run tsc in sync
-exec('tsc', (error, stdout, stderr) => {
+exec('tsc', {cwd: root}, (error, stdout) => {
     if (error) {
         console.error(`exec error: ${error}`)
         console.error(stdout)
@@ -28,8 +31,8 @@ exec('tsc', (error, stdout, stderr) => {
     }
 
     // Copy package.json to dist folder
-    const source = path.resolve(__dirname, 'package.json')
-    const destination = path.resolve(__dirname, 'dist', 'package.json')
+    const source = path.resolve(root, 'package.json')
+    const destination = path.resolve(root, 'dist', 'package.json')
 
     copyFile(source, destination)
         .then(() => console.log('package.json copied to dist folder'))
@@ -37,7 +40,7 @@ exec('tsc', (error, stdout, stderr) => {
 
     // publish to npm
     if (process.argv.includes('--publish')) {
-        exec('npm publish', {cwd: path.resolve(__dirname, 'dist')}, (error, stdout, stderr) => {
+        exec('npm publish', {cwd: path.resolve(root, 'dist')}, (error, stdout) => {
             if (error) {
                 console.error(`exec error: ${error}`)
                 return
@@ -46,4 +49,3 @@ exec('tsc', (error, stdout, stderr) => {
         })
     }
 })
-

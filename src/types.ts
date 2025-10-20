@@ -344,4 +344,3 @@ export interface NotifySub {
     notification: NotifySubNotification;
     event: NotifySubEventPayload;
 }
-
