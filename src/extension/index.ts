@@ -152,10 +152,21 @@ onContext((context, changed) => {
 })
 
 /**
- * Returns the current extension instance. In future versions, this method will be used to initialize the
- * extension instance when working without the supervisor.
+ * Returns the current extension instance.
  *
- * @returns The extension instance
+ * This helper provides the canonical {@link Extension} object used throughout
+ * the SDK. Call {@link initializeExtension} to get a stable instance that you
+ * can pass into other composables such as {@link useAuth} or
+ * {@link useContext}.
+ *
+ * @returns The {@link Extension} instance bound to the current runtime.
+ *
+ * @example
+ * ```ts
+ * import { initializeExtension } from '@own3d/sdk'
+ *
+ * const extension = initializeExtension()
+ * ```
  */
 export const initializeExtension = (): Extension => {
     return extension

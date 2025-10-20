@@ -1,29 +1,49 @@
 import type {Extension} from "../types.ts";
 
+/**
+ * Methods returned by {@link usePubSub} for publishing and subscribing to
+ * pubsub events handled by the extension runtime.
+ *
+ * @remarks
+ * - The `publish` method POSTs to OWN3D's pubsub endpoint using the
+ *   provided {@link Extension}.axios client and returns a
+ *   {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise|Promise}.
+ * - The `subscribe` method attaches a socket listener to the provided
+ *   {@link Extension} and invokes the callback when a matching `pubsub`
+ *   event is received.
+ *
+ * @example
+ * ```ts
+ * import { usePubSub, initializeExtension } from '@own3d/sdk'
+ *
+ * const extension = initializeExtension()
+ * const { subscribe } = usePubSub(extension)
+ * subscribe('notifysub', (data) => console.log('notifysub', data))
+ * ```
+ */
 export interface PubSubComposable {
     publish: (event: string, data: any) => Promise<void>,
     subscribe: (event: string, callback: (data: any) => void) => void
 }
 
 /**
- * The Socket module provides methods to connect to our event bus, which is a real-time messaging system
- * that allows you to receive events from the OWN3D platform. For example, you can listen for events like
- * new subscriptions or donations via our NotifySub Event Types or custom events. You can also use the
- * Socket module to receive events from the extension itself, like Remote Config changes.
+ * Create a PubSub helper bound to an {@link Extension} instance.
  *
- * @param extension - The extension instance
+ * The helper returns a {@link PubSubComposable} with `publish` and
+ * `subscribe` functions to interact with the OWN3D pubsub system from
+ * inside an extension.
+ *
+ * @param extension - The extension instance to bind to ({@link Extension}).
+ * @returns The {@link PubSubComposable} helpers.
  *
  * @example
- * import { initializeExtension } from '@own3d/sdk/extension'
- * import { useSocket } from '@own3d/sdk/socket'
+ * ```ts
+ * import { usePubSub, initializeExtension } from '@own3d/sdk'
  *
  * const extension = initializeExtension()
- *
- * const { on } = useSocket(extension)
- *
- * on('notifysub', (data) => {
- *     console.log(data)
- * })
+ * const pubsub = usePubSub(extension)
+ * await pubsub.publish('custom-event', { foo: 'bar' })
+ * ```
  */
 export function usePubSub(extension: Extension): PubSubComposable {
     return {

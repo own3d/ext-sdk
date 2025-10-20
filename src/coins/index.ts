@@ -1,5 +1,25 @@
 import type { Extension, Metadata, Transaction } from '../types.ts'
 
+/**
+ * Methods returned by {@link useCoins} for working with the OWN3D coins system.
+ *
+ * @remarks
+ * - `getProducts` returns a list of available coin products.
+ * - `useCoins` initiates a purchase and resolves to a {@link Transaction}.
+ * - `onTransactionComplete` and `onTransactionCancelled` register listeners
+ *   for transaction lifecycle events.
+ *
+ * @example
+ * ```ts
+ * import { initializeExtension } from '@own3d/sdk'
+ * import { useCoins } from '@own3d/sdk'
+ *
+ * const extension = initializeExtension()
+ * const { getProducts } = useCoins(extension)
+ * const products = await getProducts()
+ * console.log(products)
+ * ```
+ */
 export interface CoinsComposable {
     getProducts: () => Promise<any>,
     showCoinsBalance: () => void,
@@ -9,22 +29,20 @@ export interface CoinsComposable {
 }
 
 /**
- * The Coins module provides methods to get products, show the coins balance, use coins and
- * listen for transaction events.
+ * Create the Coins helper bound to an {@link Extension} instance.
  *
- * @param extension
+ * @param extension - The {@link Extension} instance to bind to.
+ * @returns The {@link CoinsComposable} methods for interacting with coins.
  *
  * @example
- * import { initializeExtension } from '@own3d/sdk/extension'
- * import { useCoins } from '@own3d/sdk/coins'
+ * ```ts
+ * import { initializeExtension } from '@own3d/sdk'
+ * import { useCoins } from '@own3d/sdk'
  *
  * const extension = initializeExtension()
- *
- * const { getProducts } = useCoins(extension)
- *
- * getProducts().then((products) => {
- *    console.log(products)
- * })
+ * const coins = useCoins(extension)
+ * await coins.useCoins('sku_123', { orderId: 'abc' })
+ * ```
  */
 export function useCoins(extension: Extension): CoinsComposable {
     const getProducts = function () {
@@ -50,7 +68,6 @@ export function useCoins(extension: Extension): CoinsComposable {
     const onTransactionCancelled = function (callback: (transaction: Transaction) => void) {
         extension.on('transaction-cancelled', (data) => callback(data))
     }
-
 
     return {
         getProducts,

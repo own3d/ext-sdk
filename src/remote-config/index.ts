@@ -1,29 +1,32 @@
 import axios, { type AxiosResponse } from 'axios'
 import type { ConfigSegmentKey, ConfigSegments, Extension, JsonObject } from '../types.ts'
 
-export export interface RemoteConfigComposable {
+export interface RemoteConfigComposable {
     getSegments: () => Promise<ConfigSegments>,
     setSegment: (segment: ConfigSegmentKey, content: JsonObject) => Promise<void>
 }
 
 /**
- * The Remote Config module provides methods to get and set configuration values without providing a backend service.
- * Make sure to check out our Remote Config documentation for more information.
+ * Remote Config helpers for reading and updating configuration segments.
  *
- * @param extension - The extension instance
+ * @remarks
+ * - `getSegments` fetches all configured segments for the extension.
+ * - `setSegment` patches a segment's content.
+ *
+ * @param extension - The {@link Extension} instance used for authentication headers.
+ * @returns The {@link RemoteConfigComposable} helper methods.
  *
  * @example
- * import { initializeExtension } from '@own3d/sdk/extension'
- * import { useRemoteConfig } from '@own3d/sdk/remote-config'
+ * ```ts
+ * import { initializeExtension } from '@own3d/sdk'
+ * import { useRemoteConfig } from '@own3d/sdk'
  *
  * const extension = initializeExtension()
- *
  * const { getSegments, setSegment } = useRemoteConfig(extension)
- *
  * const segments = await getSegments()
  * console.log(segments)
- *
- * await setSegment('creator', { key: 'value' })
+ * await setSegment('global', { key: 'value' })
+ * ```
  */
 export function useRemoteConfig(extension: Extension): RemoteConfigComposable {
     const _axios = axios.create({

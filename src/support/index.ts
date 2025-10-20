@@ -2,6 +2,9 @@
 
 import * as WebFont from "webfontloader";
 
+/**
+ * Describes a border radius configuration used by {@link radius}.
+ */
 export interface BorderRadius {
     multiple: boolean;
     radius: number;
@@ -11,6 +14,9 @@ export interface BorderRadius {
     "bottom-right": number;
 }
 
+/**
+ * Font-related settings used by {@link textStyle}.
+ */
 export interface FontSettings {
     "font-color": string;
     "font-family": string;
@@ -30,6 +36,24 @@ export interface CssProperties {
     [key: string]: CssValue;
 }
 
+/**
+ * Build a CSS-compatible object from {@link FontSettings}.
+ *
+ * This helper converts the extension's font settings into an object that can
+ * be used for inline styles in React/Vue/DOM. You can pass an optional
+ * transformer map to run custom conversions per property.
+ *
+ * @param fontSettings - Partial font settings received from the extension.
+ * @param transformer - Optional converter functions applied per property.
+ * @returns A plain object mapping CSS property names to values.
+ *
+ * @example
+ * ```ts
+ * import { textStyle } from '@own3d/sdk'
+ * const style = textStyle({ 'font-size': 16, 'font-family': 'Inter' })
+ * // style.fontSize === '16px'
+ * ```
+ */
 export function textStyle(
     fontSettings: FontSettings | undefined | null,
     transformer: { [key: string]: (x: CssValue) => CssValue } = {},
@@ -76,6 +100,22 @@ export function textStyle(
     return style;
 }
 
+/**
+ * Convert a {@link BorderRadius} into a CSS properties object.
+ *
+ * If `multiple` is true the helper returns per-corner properties, otherwise
+ * it returns a single `borderRadius` value.
+ *
+ * @param borderRadius - Border radius settings from the extension.
+ * @returns A CSS properties object usable in inline styles.
+ *
+ * @example
+ * ```ts
+ * import { radius } from '@own3d/sdk'
+ * const css = radius({ multiple: false, radius: 6, 'top-left': 6, 'top-right': 6, 'bottom-left': 6, 'bottom-right': 6 })
+ * // css.borderRadius === '6px'
+ * ```
+ */
 export function radius(
     borderRadius: BorderRadius | undefined | null,
 ): CssProperties {
@@ -96,6 +136,23 @@ export function radius(
     };
 }
 
+/**
+ * Check whether a key is present in an array or truthy in an object.
+ *
+ * This small utility supports form controls where the checked state may be
+ * represented as an array of selected keys or an object map.
+ *
+ * @param input - An array of strings or an object map.
+ * @param key - The key to test for presence.
+ * @returns True if the key is considered checked.
+ *
+ * @example
+ * ```ts
+ * import { checked } from '@own3d/sdk'
+ * checked(['a','b'], 'a') // true
+ * checked({ a: true }, 'a') // true
+ * ```
+ */
 export function checked(
     input: Array<string> | Record<string, unknown>,
     key: string,
@@ -109,6 +166,19 @@ export function checked(
 
 const cachedFonts: CssValue[] = [];
 
+/**
+ * Load a web font using the bundled webfontloader library.
+ *
+ * This helper is idempotent — it will not request the same font twice.
+ *
+ * @param fontFamily - The font family name to load (e.g. "Inter").
+ *
+ * @example
+ * ```ts
+ * import { loadFont } from '@own3d/sdk'
+ * loadFont('Inter')
+ * ```
+ */
 export function loadFont(fontFamily: CssValue): void {
     if (!fontFamily || cachedFonts.includes(fontFamily)) {
         return;
@@ -126,6 +196,16 @@ export function loadFont(fontFamily: CssValue): void {
     });
 }
 
+/**
+ * Calls {@link loadFont} for `fontFamily` in the provided CSS object and
+ * returns the same object for chaining.
+ *
+ * @example
+ * ```ts
+ * import { lazyLoadFont } from '@own3d/sdk'
+ * const css = lazyLoadFont({ fontFamily: 'Inter' })
+ * ```
+ */
 export function lazyLoadFont(object: CssProperties): CssProperties {
     if (object.fontFamily) {
         loadFont(object.fontFamily);

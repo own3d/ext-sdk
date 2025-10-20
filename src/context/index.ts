@@ -8,21 +8,23 @@ export interface ContextComposable {
 }
 
 /**
- * The Context module provides methods to get the current context of the extension.
+ * Helpers for subscribing to extension context updates.
  *
- * @param extension - The extension instance
+ * The context contains environment, language, mode, theme and other runtime
+ * details about the extension host. Use {@link useContext} to receive updates
+ * when the supervisor sends a new context.
+ *
+ * @param extension - The {@link Extension} instance to observe.
  *
  * @example
- * import { initializeExtension } from '@own3d/sdk/extension'
- * import { useContext } from '@own3d/sdk/context'
+ * ```ts
+ * import { initializeExtension } from '@own3d/sdk'
+ * import { useContext } from '@own3d/sdk'
  *
  * const extension = initializeExtension()
- *
  * const { onContext } = useContext(extension)
- *
- * onContext((context, changed) => {
- *     console.log(context, changed)
- * })
+ * onContext((ctx, changed) => console.log('context changed', changed, ctx))
+ * ```
  */
 export function useContext(extension: Extension): ContextComposable {
     const onContext = (

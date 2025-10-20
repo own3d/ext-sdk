@@ -9,19 +9,22 @@ export interface SceneBuilderComposable {
 }
 
 /**
- * The SceneBuilder module provides methods to the Scene Builder.
+ * Helpers for interacting with the Scene Builder overlay.
  *
- * @param extension - The extension instance
+ * Use {@link useSceneBuilder} to control interactivity, update input values
+ * and listen for click events originating from the Scene Builder UI.
+ *
+ * @param extension - The {@link Extension} instance.
  *
  * @example
- * import { initializeExtension } from '@own3d/sdk/extension'
- * import { useSceneBuilder } from '@own3d/sdk/scene-builder'
+ * ```ts
+ * import { initializeExtension } from '@own3d/sdk'
+ * import { useSceneBuilder } from '@own3d/sdk'
  *
  * const extension = initializeExtension()
- *
  * const { setInteractive } = useSceneBuilder(extension)
- *
- * setInteractive(true)
+ * await setInteractive(true)
+ * ```
  */
 export function useSceneBuilder(extension: Extension): SceneBuilderComposable {
     const {invoke, on} = useIpc(extension)

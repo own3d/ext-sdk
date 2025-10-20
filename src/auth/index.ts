@@ -1,14 +1,22 @@
 import type { Authorized, Extension } from '../types.ts'
 
 /**
- * Represents the authentication helper returned by {@link useAuth}.
- * It exposes callbacks that fire when the extension is authorized.
+ * Authentication helpers returned by {@link useAuth}.
+ *
+ * This composable exposes callbacks that fire when the extension is authorized
+ * by the OWN3D platform.
  *
  * @since 0.0.1
  *
  * @example
+ * ```ts
+ * import { initializeExtension } from '@own3d/sdk'
+ * import { useAuth } from '@own3d/sdk'
+ *
+ * const extension = initializeExtension()
  * const { onAuthorized } = useAuth(extension)
  * onAuthorized(user => console.log('User authorized', user))
+ * ```
  */
 export interface AuthComposable {
     /**
@@ -21,24 +29,25 @@ export interface AuthComposable {
 }
 
 /**
- * The Auth module provides methods to authenticate the extension with the OWN3D platform.
- * It allows you to get the current authenticated user and listen for changes to the authentication state.
+ * Authenticate the extension with the OWN3D platform and provide reactive helpers.
  *
- * @param extension - The extension instance
+ * The returned {@link AuthComposable} allows you to listen for authorization
+ * events emitted by the extension supervisor.
+ *
+ * @param extension - The {@link Extension} instance to authorize.
+ * @returns An {@link AuthComposable} containing auth helpers.
  *
  * @since 0.0.1
  *
  * @example
- * import { initializeExtension } from '@own3d/sdk/extension'
- * import { useAuth } from '@own3d/sdk/auth'
+ * ```ts
+ * import { initializeExtension } from '@own3d/sdk'
+ * import { useAuth } from '@own3d/sdk'
  *
  * const extension = initializeExtension()
- *
  * const { onAuthorized } = useAuth(extension)
- *
- * onAuthorized(async (user) => {
- *     console.log(user)
- * })
+ * onAuthorized(user => console.log('Authorized', user))
+ * ```
  */
 export function useAuth(extension: Extension): AuthComposable {
     const onAuthorized = (authCallback: (auth: Authorized) => void): void => {
