@@ -1,7 +1,7 @@
 import type { Extension } from '../types'
 import { useIpc } from '../ipc/index'
 
-interface SceneBuilderComposable {
+export interface SceneBuilderComposable {
     setInteractive: (interactive: boolean) => Promise<void>
     onClick: (inputId: string, callback: () => void) => void
     setValues: (values: Record<string, string>) => Promise<void>

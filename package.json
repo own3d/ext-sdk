@@ -12,23 +12,32 @@
   },
   "types": "./index.d.ts",
   "scripts": {
-    "release": "tsx make-release.ts",
-    "build": "tsc"
+    "release": "tsx scripts/make-release.ts",
+    "build": "tsc",
+    "sdk:index": "tsx scripts/build-sdk-index.ts",
+    "sdk:zip": "tsx scripts/zip-sdk-index.ts",
+    "sdk:publish": "tsx scripts/publish-index.ts",
+    "sdk:release": "pnpm sdk:index && pnpm sdk:zip && pnpm sdk:publish"
   },
   "devDependencies": {
-    "@types/webfontloader": "^1.6.38",
     "@types/node": "^20.14.0",
+    "@types/webfontloader": "^1.6.38",
     "rollup-plugin-copy": "^3.5.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
-    "vite": "^5.3.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.11",
     "vite-plugin-dts": "^4.0.3"
   },
   "dependencies": {
-    "axios": "^1.7.2",
+    "@openai/agents": "^0.1.10",
+    "archiver": "^7.0.1",
+    "axios": "^1.12.2",
+    "dotenv": "^17.2.3",
     "glob": "^11.0.0",
     "json-rpc-2.0": "^1.7.0",
+    "openai": "^6.5.0",
+    "ts-morph": "^27.0.2",
     "webfontloader": "^1.6.28"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b"
 }

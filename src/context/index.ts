@@ -1,6 +1,6 @@
 import type { Context, Extension } from '../types.ts'
 
-interface ContextComposable {
+export interface ContextComposable {
     onContext: (
         contextCallback: <T extends Partial<Context>>(context: T, changed: ReadonlyArray<keyof T>) => void,
         options?: { immediate: boolean } | undefined,

@@ -123,12 +123,33 @@ export interface Transaction {
  * When a user has authorized your extension, you will receive an Authorized object.
  */
 export interface Authorized {
+    /**
+     * The client ID of the extension.
+     */
     client_id: string;
+    /**
+     * The client token of the extension (used for EBS authentication).
+     */
     client_token: string;
+    /**
+     * The channel ID where the extension is running.
+     */
     channel_id: string;
+    /**
+     * The user ID of the authenticated user.
+     */
     user_id: string;
+    /**
+     * The scopes granted to the extension.
+     */
     scopes: string[];
+    /**
+     * The token that can be used to make authenticated requests to the OWN3D API.
+     */
     token: string;
+    /**
+     * The mode in which the extension is running (widget, standalone, browser-source, config).
+     */
     mode: Mode;
 }
 

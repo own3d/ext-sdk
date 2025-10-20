@@ -1,20 +1,21 @@
 {
   "compilerOptions": {
-    "module": "ES2020",
     "target": "ES2020",
-    "sourceMap": true,
-    "strict": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
     "declaration": true,
-    "allowImportingTsExtensions": false,
     "emitDeclarationOnly": false,
-    "moduleResolution": "node",
-    "outDir": "dist",
+    "sourceMap": true,
     "noEmit": false,
-    "types": [
-      "node"
-    ]
+    "outDir": "dist",
+    "allowImportingTsExtensions": false,
+    "types": ["node"],
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["src/*", "*"]
+    }
   },
-  "include": [
-    "src",
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

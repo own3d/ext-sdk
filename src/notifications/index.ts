@@ -1,7 +1,7 @@
 import type { Extension } from '../types'
 import { useIpc } from '../ipc/index'
 
-interface NotificationsComposable {
+export interface NotificationsComposable {
     notify: (content: Notification) => Promise<NotificationResponse>
     dismiss: (id: string) => Promise<NotificationResponse>
     patch: (id: string, content: Notification) => Promise<NotificationResponse>
@@ -11,14 +11,14 @@ interface NotificationsComposable {
     error: (content: string | Notification) => Promise<NotificationResponse>
 }
 
-interface Notification {
+export interface Notification {
     id?: string
     type: 'info' | 'success' | 'warning' | 'error'
     title?: string
     message: string
 }
 
-interface NotificationResponse {
+export interface NotificationResponse {
     id: string
     success: boolean
 }

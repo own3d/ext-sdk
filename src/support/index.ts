@@ -2,7 +2,7 @@
 
 import * as WebFont from "webfontloader";
 
-interface BorderRadius {
+export interface BorderRadius {
     multiple: boolean;
     radius: number;
     "top-left": number;
@@ -11,7 +11,7 @@ interface BorderRadius {
     "bottom-right": number;
 }
 
-interface FontSettings {
+export interface FontSettings {
     "font-color": string;
     "font-family": string;
     "font-weight": number;
@@ -24,9 +24,9 @@ interface FontSettings {
     "font-casing": string;
 }
 
-type CssValue = string | number | undefined;
+export type CssValue = string | number | undefined;
 
-interface CssProperties {
+export interface CssProperties {
     [key: string]: CssValue;
 }
 

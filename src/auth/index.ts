@@ -1,6 +1,22 @@
 import type { Authorized, Extension } from '../types.ts'
 
-interface AuthComposable {
+/**
+ * Represents the authentication helper returned by {@link useAuth}.
+ * It exposes callbacks that fire when the extension is authorized.
+ *
+ * @since 0.0.1
+ *
+ * @example
+ * const { onAuthorized } = useAuth(extension)
+ * onAuthorized(user => console.log('User authorized', user))
+ */
+export interface AuthComposable {
+    /**
+     * Registers a callback that runs whenever the extension
+     * successfully authenticates with the OWN3D platform.
+     *
+     * @param authCallback - Function called with the {@link Authorized} object.
+     */
     onAuthorized: (authCallback: (auth: Authorized) => void) => void
 }
 
@@ -9,6 +25,8 @@ interface AuthComposable {
  * It allows you to get the current authenticated user and listen for changes to the authentication state.
  *
  * @param extension - The extension instance
+ *
+ * @since 0.0.1
  *
  * @example
  * import { initializeExtension } from '@own3d/sdk/extension'

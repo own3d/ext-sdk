@@ -1,6 +1,6 @@
 import type {Extension} from "../types.ts";
 
-interface PubSubComposable {
+export interface PubSubComposable {
     publish: (event: string, data: any) => Promise<void>,
     subscribe: (event: string, callback: (data: any) => void) => void
 }

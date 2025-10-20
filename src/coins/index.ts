@@ -1,6 +1,6 @@
 import type { Extension, Metadata, Transaction } from '../types.ts'
 
-interface CoinsComposable {
+export interface CoinsComposable {
     getProducts: () => Promise<any>,
     showCoinsBalance: () => void,
     useCoins: (sku: string, metadata: Metadata) => Promise<Transaction>,

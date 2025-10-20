@@ -1,6 +1,6 @@
 import type {Extension} from "../types.ts";
 
-interface SocketComposable {
+export interface SocketComposable {
     on: (event: string, callback: (data: any) => void) => void
 }
 

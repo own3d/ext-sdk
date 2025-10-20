@@ -1,13 +1,13 @@
 import type { Extension } from '../types'
 import { useIpc } from '../ipc/index'
 
-interface ProSubscriptionUpsellOptions {
+export interface ProSubscriptionUpsellOptions {
   firstpromoter?: {
     slug?: string
   }
 }
 
-interface SubscriptionComposable {
+export interface SubscriptionComposable {
   showProSubscriptionUpsell: (options: ProSubscriptionUpsellOptions) => void
 }
 

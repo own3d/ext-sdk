@@ -35,14 +35,6 @@ exec('tsc', (error, stdout, stderr) => {
         .then(() => console.log('package.json copied to dist folder'))
         .catch((error) => console.error(error))
 
-    // Copy src/types.d.ts to dist folder
-    const sourceTypes = path.resolve(__dirname, 'src', 'types.ts')
-    const destinationTypes = path.resolve(__dirname, 'dist', 'types.ts')
-
-    copyFile(sourceTypes, destinationTypes)
-        .then(() => console.log('types.ts copied to dist folder'))
-        .catch((error) => console.error(error))
-
     // publish to npm
     if (process.argv.includes('--publish')) {
         exec('npm publish', {cwd: path.resolve(__dirname, 'dist')}, (error, stdout, stderr) => {

@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse } from 'axios'
 import type { ConfigSegmentKey, ConfigSegments, Extension, JsonObject } from '../types.ts'
 
-interface RemoteConfigComposable {
+export export interface RemoteConfigComposable {
     getSegments: () => Promise<ConfigSegments>,
     setSegment: (segment: ConfigSegmentKey, content: JsonObject) => Promise<void>
 }

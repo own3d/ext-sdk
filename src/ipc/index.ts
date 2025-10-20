@@ -1,6 +1,6 @@
 import type { Extension } from '../types.ts'
 
-interface IpcComposable {
+export interface IpcComposable {
     send: (channel: string, payload: any) => void,
     invoke: (channel: string, payload: any) => Promise<any>
     on: (channel: string, callback: (payload: any) => void) => void
