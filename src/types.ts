@@ -240,18 +240,56 @@ export interface Context {
 }
 
 /**
+ * Known NotifySub platforms (common providers). We keep the literal options for
+ * better tooling/autocomplete while still allowing other vendor identifiers.
+ */
+export type NotifySubPlatform =
+    | 'twitch'
+    | 'youtube'
+    | 'kick'
+    | 'own3d';
+
+/**
  * NotifySub condition identifies the platform and target id for notify-sub events.
  */
 export interface NotifySubCondition {
-    platform: string;
+    platform: NotifySubPlatform;
     platform_id: string;
 }
+
+/**
+ * Valid NotifySub event type names (mapped from the documentation).
+ * Use this union to strongly-type {@link NotifySubSubscription.type}.
+ */
+export type NotifySubType =
+    | 'stream.online'
+    | 'stream.offline'
+    | 'update'
+    | 'follow'
+    | 'subscribe'
+    | 're-subscribe'
+    | 'gift-subscribe'
+    | 'cheer'
+    | 'raid'
+    | 'superchat'
+    | 'supersticker'
+    | 'channel.shoutout.create'
+    | 'channel.shoutout.receive'
+    | 'channel.hype_train.begin'
+    | 'charity-donation'
+    | 'channel.channel_points_custom_reward.add'
+    | 'channel.channel_points_custom_reward.update'
+    | 'channel.channel_points_custom_reward.remove'
+    | 'channel.channel_points_custom_reward_redemption.add'
+    | 'channel.channel_points_custom_reward_redemption.update'
+    | 'donation'
+    | 'custom';
 
 /**
  * NotifySub subscription metadata.
  */
 export interface NotifySubSubscription {
-    type: string;
+    type: NotifySubType;
     version: string;
     condition: NotifySubCondition;
 }
