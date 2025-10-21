@@ -17,6 +17,7 @@ type Item = {
     deprecated?: boolean;
     version?: string;
     members?: MemberDoc[];
+    values?: string[]; // added: for union type literal values (e.g. NotifySubType)
 };
 
 function readPkgVersion() {
@@ -30,7 +31,7 @@ function readPkgVersion() {
 const version = readPkgVersion();
 const outDir = "ai-dist/sdk-index";
 fs.rmSync(outDir, { recursive: true, force: true });
-fs.mkdirSync(outDir, { recursive: true, force: true });
+fs.mkdirSync(outDir, { recursive: true });
 
 const project = new Project({ tsConfigFilePath: "tsconfig.json" });
 // safety net for monorepos/unusual includes
@@ -95,7 +96,7 @@ function collectInterfaceMembers(intf: InterfaceDeclaration): MemberDoc[] {
     return intf.getMembers().map((m: any) => {
         const md = getDoc(m);
         const name = m.getName?.() ?? "";
-        let typeText = "";
+        let typeText;
         try {
             typeText = m.getType?.().getText(m) ?? "";
         } catch {
@@ -132,7 +133,7 @@ for (const sf of project.getSourceFiles()) {
             if (kind === "FunctionDeclaration") {
                 const d = getDoc(decl);
                 const signature = makeSignature(decl);
-                const returns = decl.getReturnType().getText(decl);
+                const returns = (decl as any).getReturnType().getText(decl);
 
                 pushItem({
                     kind: "function",
@@ -149,7 +150,7 @@ for (const sf of project.getSourceFiles()) {
 
                 referencedTypeStrings.add(signature);
                 referencedTypeStrings.add(returns);
-                decl.getParameters().forEach((p: any) => {
+                (decl as any).getParameters().forEach((p: any) => {
                     try {
                         referencedTypeStrings.add(p.getType().getText(decl));
                     } catch {}
@@ -171,7 +172,7 @@ for (const sf of project.getSourceFiles()) {
                     version,
                 });
 
-                const ctor = decl.getConstructors()[0];
+                const ctor = (decl as any).getConstructors()[0];
                 if (ctor) {
                     const dd = getDoc(ctor);
                     const sig = makeSignature(ctor);
@@ -188,17 +189,17 @@ for (const sf of project.getSourceFiles()) {
                         version,
                     });
                     referencedTypeStrings.add(sig);
-                    ctor.getParameters().forEach((p: any) => {
+                    (ctor as any).getParameters().forEach((p: any) => {
                         try {
                             referencedTypeStrings.add(p.getType().getText(ctor));
                         } catch {}
                     });
                 }
 
-                for (const m of decl.getMethods()) {
+                for (const m of (decl as any).getMethods()) {
                     const dm = getDoc(m);
                     const sig = makeSignature(m);
-                    const ret = m.getReturnType().getText(m);
+                    const ret = (m as any).getReturnType().getText(m);
                     pushItem({
                         kind: "function",
                         symbol: `${exportName}.${m.getName()}`,
@@ -213,7 +214,7 @@ for (const sf of project.getSourceFiles()) {
                     });
                     referencedTypeStrings.add(sig);
                     referencedTypeStrings.add(ret);
-                    m.getParameters().forEach((p: any) => {
+                    (m as any).getParameters().forEach((p: any) => {
                         try {
                             referencedTypeStrings.add(p.getType().getText(m));
                         } catch {}
@@ -244,6 +245,31 @@ for (const sf of project.getSourceFiles()) {
                         deprecated: "deprecated" in (d.tags ?? {}),
                         version,
                         members,
+                    });
+                } else if (mapped === "type") {
+                    // Attempt to extract string-literal union members for better docs
+                    let values: string[] | undefined = undefined;
+                    try {
+                        // Prefer the type node text which preserves literal unions reliably
+                        const typeNodeText = (decl as any).getTypeNode?.()?.getText?.() ?? null;
+                        const typeTextFallback = (decl as any).getType?.()?.getText?.(decl) ?? null;
+                        const rawText = typeNodeText ?? typeTextFallback ?? (decl as any).getText?.() ?? "";
+                        const matches = Array.from(rawText.matchAll(/['"]([^'"\\]+(?:\\.[^'"\\]*)*)['"]/g)).map((m) => m[1]);
+                        if (matches.length) values = matches;
+                    } catch {
+                        // fallback: nothing
+                    }
+
+                    pushItem({
+                        kind: mapped,
+                        symbol: exportName,
+                        file,
+                        jsDoc: d.text,
+                        examples: d.examples,
+                        since: d.tags?.since,
+                        deprecated: "deprecated" in (d.tags ?? {}),
+                        version,
+                        values,
                     });
                 } else {
                     pushItem({
@@ -292,8 +318,7 @@ function safeName(symbol: string) {
 }
 
 for (const it of items) {
-    const header =
-        it.kind === "function" && it.signature ? `${it.symbol} ${it.signature}` : `${it.kind} ${it.symbol}`;
+    // header is unused; we previously printed it but currently we don't need it
 
     let body = `
 # [SDK] ${it.symbol} ${it.version ? `(v${it.version})` : ""}
@@ -324,6 +349,15 @@ ${it.members
 \`${m.type}\`
 ${(asString(m.jsDoc).trim() || "")}`)
             .join("\n\n")}
+`;
+    }
+
+    // Emit literal values for union types (e.g. NotifySubType)
+    if (it.kind === "type" && Array.isArray(it.values) && it.values.length) {
+        body += `
+
+## Values
+${it.values.map((v) => `- \`${v}\``).join("\n")}
 `;
     }
 
