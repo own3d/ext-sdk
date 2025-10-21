@@ -1,4 +1,4 @@
-import type {Extension} from "../types.ts";
+import type {Extension, NotifySub} from "../types.ts";
 
 /**
  * Minimal socket composable surface used by {@link useSocket}.
@@ -14,7 +14,30 @@ export interface SocketComposable {
      * @param event - The socket event name to listen for (for example: 'notifysub', 'message').
      * @param callback - Called when the event is received with the event payload.
      */
-    on: (event: string, callback: (data: any) => void) => void
+    on: <E extends keyof SocketEventMap>(event: E, callback: (data: SocketEventMap[E]) => void) => void
+}
+
+/**
+ * Generic envelope delivered by the supervisor socket hook.
+ */
+export type EventEnvelope<T = any> = {
+    event: string;
+    data: T;
+}
+
+/**
+ * Known/expected socket event names and their payload shapes. Add new events
+ * here as the SDK surface grows so callers get proper typings.
+ */
+export interface SocketEventMap {
+    // notify-sub event payloads
+    'notifysub': NotifySub;
+    // chat events
+    'message': ChatMessage;
+    'delete-message': { id?: string; ids?: string[]; } | Record<string, any>;
+    'clear-chat': { reason?: string } | null;
+    // fallback for unknown/custom events
+    [key: string]: any;
 }
 
 /**
@@ -36,8 +59,8 @@ export interface SocketComposable {
  * ```
  */
 export function useSocket(extension: Extension): SocketComposable {
-    const on = (event: string, callback: (data: any) => void): void => {
-        extension.on(`socket`, (data) => data.event === event ? callback(data.data) : null)
+    const on = <E extends keyof SocketEventMap>(event: E, callback: (data: SocketEventMap[E]) => void): void => {
+        extension.on(`socket`, (data: EventEnvelope) => data.event === event ? callback(data.data) : null)
     }
 
     return {
@@ -169,9 +192,9 @@ export interface UseChatComposable {
      */
     onMessage: (callback: (msg: ChatMessage) => void) => void;
     /** Register a callback invoked when a single message is deleted. */
-    onDeleteMessage: (callback: (payload: any) => void) => void;
+    onDeleteMessage: (callback: (payload: SocketEventMap['delete-message']) => void) => void;
     /** Register a callback invoked when a channel chat is cleared. */
-    onClearChat: (callback: (payload: any) => void) => void;
+    onClearChat: (callback: (payload: SocketEventMap['clear-chat']) => void) => void;
     /** Normalize a raw platform payload into {@link ChatMessage}. */
     parseMessage: (raw: any) => ChatMessage;
 }
@@ -195,25 +218,27 @@ export interface UseChatComposable {
  */
 export function useChat(extension: Extension): UseChatComposable {
     const onMessage = (callback: (msg: ChatMessage) => void): void => {
-        extension.on('socket', (envelope: any) => {
+        extension.on('socket', (envelope: EventEnvelope<unknown>) => {
             if (envelope?.event === 'message') {
+                // Attempt to treat the envelope data as a ChatMessage. If callers
+                // need stricter normalization, they should use `parseMessage`.
                 callback(envelope.data as ChatMessage)
             }
         })
     }
 
-    const onDeleteMessage = (callback: (payload: any) => void): void => {
-        extension.on('socket', (envelope: any) => {
+    const onDeleteMessage = (callback: (payload: SocketEventMap['delete-message']) => void): void => {
+        extension.on('socket', (envelope: EventEnvelope<unknown>) => {
             if (envelope?.event === 'delete-message') {
-                callback(envelope.data)
+                callback(envelope.data as SocketEventMap['delete-message'])
             }
         })
     }
 
-    const onClearChat = (callback: (payload: any) => void): void => {
-        extension.on('socket', (envelope: any) => {
+    const onClearChat = (callback: (payload: SocketEventMap['clear-chat']) => void): void => {
+        extension.on('socket', (envelope: EventEnvelope<unknown>) => {
             if (envelope?.event === 'clear-chat') {
-                callback(envelope.data)
+                callback(envelope.data as SocketEventMap['clear-chat'])
             }
         })
     }
@@ -242,7 +267,7 @@ export function useChat(extension: Extension): UseChatComposable {
                 : []
 
         // Build a normalized ChatMessage. Keep other fields permissive.
-        const normalized: ChatMessage = {
+        return {
             id: String(msgAny.id ?? ''),
             type: msgAny.type ?? 'message',
             timestamp: timestampNum,
@@ -257,8 +282,6 @@ export function useChat(extension: Extension): UseChatComposable {
             // spread raw last so callers can still access unknown fields if needed
             ...msgAny,
         }
-
-        return normalized
     }
 
     return {

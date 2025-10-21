@@ -19,13 +19,13 @@
  */
 export interface Extension {
     /** Internal: Register a listener for a named supervisor runtime event. */
-    on: (event: string, callback: (data: any) => void) => void;
+    on: <T = any>(event: string, callback: (data: T) => void) => void;
     /** Internal: Register a one-time listener for the named supervisor runtime event. */
-    once: (event: string, callback: (data: any) => void) => void;
+    once: <T = any>(event: string, callback: (data: T) => void) => void;
     /** Internal: Send a message into the host runtime; optionally provide a callback for replies. */
-    postMessage: (event: string, data: any, callback?: (data: any) => void) => void;
+    postMessage: <T = any>(event: string, data: T, callback?: (data: any) => void) => void;
     /** Internal: Emit a local event to the supervisor runtime. */
-    emit: (event: string, data: any) => void;
+    emit: <T = any>(event: string, data: T) => void;
     /** Authenticated user information (populated after authorization). */
     user?: Authorized;
     /** Runtime context provided by the host supervisor. */
