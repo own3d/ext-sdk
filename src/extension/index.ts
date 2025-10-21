@@ -31,7 +31,7 @@ const _jsonRpc = new JSONRPCServerAndClient(
  */
 const useJsonRpc: boolean = false
 
-function emit(event: string, data: any) {
+function emit(event: string, data: any): void {
     if (event in _observers) {
         for (const observer of _observers[event]) {
             observer(data)
@@ -83,7 +83,7 @@ function postMessage(event: string, data: any, callback?: (data: any) => void) {
     }
 }
 
-window.addEventListener('message', async function (e: any) {
+window.addEventListener('message', async function (e: any): Promise<void> {
     // Check if the message originated from the same origin
     // @ts-ignore
     if (e.origin === window.origin) {
@@ -106,14 +106,14 @@ window.addEventListener('message', async function (e: any) {
     }
 })
 
-window.addEventListener('beforeunload', function () {
+window.addEventListener('beforeunload', function (): void {
     _jsonRpc.rejectAllPendingRequests(
         'Extension is being unloaded',
     )
     postMessage('beforeunload', {state: _state})
 })
 
-window.addEventListener('load', function () {
+window.addEventListener('load', function (): void {
     postMessage('load', {state: _state, version: 2, jsonrpc: useJsonRpc})
     _jsonRpc
         .request('echo', {text: 'jsonrpc echo test'})
@@ -137,7 +137,7 @@ const {onContext} = useContext(extension)
 /**
  * Internal listener for the authorization event, which is triggered by the extension
  */
-onAuthorized((data: Authorized) => {
+onAuthorized((data: Authorized): void => {
     _axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
     extension.user = {...extension.user, ...data} as Authorized
 })
@@ -146,7 +146,7 @@ onAuthorized((data: Authorized) => {
  * Internal listener for the context event, which is triggered by the extension
  */
 // Use a generic callback signature matching useContext's declared type
-onContext(<T extends Partial<Context>>(context: T, changed: ReadonlyArray<keyof T>) => {
+onContext(<T extends Partial<Context>>(context: T, changed: ReadonlyArray<keyof T>): void => {
     for (const key of changed) {
         extension.context = {...extension.context, [key]: context[key]} as Context
     }

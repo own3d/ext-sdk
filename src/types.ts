@@ -2,35 +2,37 @@
  * The canonical extension runtime object used throughout the SDK.
  *
  * This object is provided by the extension supervisor and exposed via
- * {@link initializeExtension} (from `src/extension`). It contains methods to
- * send and receive messages, access the authenticated user, runtime context
- * and an axios client configured for the OWN3D API.
+ * {@link initializeExtension} (from `src/extension`).
+ * Call {@link initializeExtension} to get a stable instance that you
+ * can pass into other composables such as {@link useAuth} or
+ * {@link useContext}. It also contains properties to access the
+ * authenticated user, runtime context and an axios client
+ * configured for the OWN3D API.
  *
  * @example
  * ```ts
- * import { initializeExtension } from '@own3d/sdk'
+ * import { initializeExtension, useSocket } from '@own3d/sdk'
  *
  * const extension = initializeExtension()
- * extension.on('context', (ctx) => console.log(ctx))
- * extension.postMessage('ping', {})
+ * const { on } = useSocket(extension)
  * ```
  */
 export interface Extension {
-    /** Register a listener for a named runtime event. */
+    /** Internal: Register a listener for a named supervisor runtime event. */
     on: (event: string, callback: (data: any) => void) => void;
-    /** Register a one-time listener for the named event. */
+    /** Internal: Register a one-time listener for the named supervisor runtime event. */
     once: (event: string, callback: (data: any) => void) => void;
-    /** Send a message into the host runtime; optionally provide a callback for replies. */
+    /** Internal: Send a message into the host runtime; optionally provide a callback for replies. */
     postMessage: (event: string, data: any, callback?: (data: any) => void) => void;
-    /** Emit a local event to SDK observers. */
+    /** Internal: Emit a local event to the supervisor runtime. */
     emit: (event: string, data: any) => void;
     /** Authenticated user information (populated after authorization). */
     user?: Authorized;
     /** Runtime context provided by the host supervisor. */
     context?: Context;
-    /** Axios instance configured for the OWN3D API. */
+    /** Internal: Axios instance configured for the OWN3D API. */
     axios: any;
-    /** Internal state token used by the extension runtime. */
+    /** Internal: Internal state token used by the extension runtime. */
     state: any;
 }
 
