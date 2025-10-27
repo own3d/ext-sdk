@@ -4,6 +4,8 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+const isCanary = process.argv.includes("--canary");
+const yes = process.argv.includes("--yes");
 
 function listMarkdownFiles(dir: string) {
     return fs.readdirSync(dir)
@@ -17,8 +19,17 @@ function chunk<T>(arr: T[], size: number) {
     return out;
 }
 
-const VECTOR_STORE_NAME = process.env.SDK_VECTOR_STORE_NAME ?? "my-sdk-index";
-const VECTOR_STORE_ID = process.env.SDK_VECTOR_STORE_ID;
+const VECTOR_STORE_NAME = process.env.SDK_VECTOR_STORE_NAME ?? "ext-sdk-index";
+const VECTOR_STORE_ID = isCanary
+    ? process.env.SDK_VECTOR_STORE_CANARY_ID
+    : process.env.SDK_VECTOR_STORE_PRODUCTION_ID;
+
+if (!isCanary && !yes) {
+    console.error("Publishing to PRODUCTION vector store. To confirm, re-run with --yes flag.");
+    process.exit(1);
+} else {
+    console.log("Publishing to CANARY vector store...");
+}
 
 (async () => {
     // 1) Create or reuse store
@@ -26,9 +37,8 @@ const VECTOR_STORE_ID = process.env.SDK_VECTOR_STORE_ID;
         ? { id: VECTOR_STORE_ID }
         : await client.vectorStores.create({ name: VECTOR_STORE_NAME });
 
-    // --- 👇 Add this block right here 👇 ---
-    // Optional wipe: remove existing files before upload
-    console.log("Clearing existing files from vector store...");
+    // Wipe store: remove existing files before upload
+    console.log(`Clearing existing files from vector store (${store.id})...`);
     const current = await client.vectorStores.files.list(store.id, {
         limit: 100
     });
@@ -40,7 +50,6 @@ const VECTOR_STORE_ID = process.env.SDK_VECTOR_STORE_ID;
         await client.files.delete(file.id);
     }
     console.log("Vector store cleared.\n");
-    // --- 👆 End wipe block 👆 ---
 
     // 2) Gather and upload markdown files
     const dir = "ai-dist/sdk-index";

@@ -16,8 +16,8 @@
     "build": "tsc",
     "sdk:index": "tsx scripts/build-sdk-index.ts",
     "sdk:zip": "tsx scripts/zip-sdk-index.ts",
-    "sdk:publish": "tsx scripts/publish-index.ts",
-    "sdk:release": "pnpm sdk:index && pnpm sdk:zip && pnpm sdk:publish"
+    "sdk:publish": "tsx scripts/publish-index.ts --canary",
+    "sdk:release": "pnpm sdk:index && pnpm sdk:zip && pnpm sdk:publish --canary"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
