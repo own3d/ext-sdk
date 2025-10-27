@@ -47,7 +47,11 @@ if (!isCanary && !yes) {
         await client.vectorStores.files.delete(file.id, {
             vector_store_id: store.id
         });
-        await client.files.delete(file.id);
+        try {
+            await client.files.delete(file.id);
+        } catch {
+            // Ignore file not found errors
+        }
     }
     console.log("Vector store cleared.\n");
 
