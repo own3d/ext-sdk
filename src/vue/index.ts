@@ -1,4 +1,5 @@
 import { App } from "vue";
+import type { Compatibility } from "../extension/index.js";
 import { initializeExtension } from "../extension/index.js";
 
 interface Plugin {
@@ -24,8 +25,8 @@ interface Plugin {
  * app.mount('#app')
  * ```
  */
-export function createExtension(): Plugin {
-  const extension = initializeExtension();
+export function createExtension(compatibility: Compatibility = 0): Plugin {
+  const extension = initializeExtension(compatibility);
 
   const install = (app: App): void => {
     app.config.globalProperties.$extension = extension;

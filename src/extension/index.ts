@@ -169,6 +169,24 @@ onContext(<T extends Partial<Context>>(context: T, changed: ReadonlyArray<keyof 
  * const extension = initializeExtension()
  * ```
  */
-export const initializeExtension = (): Extension => {
+
+export type Compatibility = 0 | typeof COMPATIBILITY_DASHBOARD_EXTENSION | typeof COMPATIBILITY_SCENE_BUILDER_WIDGET | typeof COMPATIBILITY_CONFIGURATION_PAGE
+
+export const COMPATIBILITY_DASHBOARD_EXTENSION = 2
+export const COMPATIBILITY_SCENE_BUILDER_WIDGET = 4
+export const COMPATIBILITY_CONFIGURATION_PAGE = 5
+
+export const initializeExtension = (compatibility: Compatibility = 0): Extension => {
+    if (compatibility === COMPATIBILITY_DASHBOARD_EXTENSION) {
+        let resizeObserver: ResizeObserver | null = null
+        resizeObserver = new ResizeObserver(entries => {
+            for (const entry of entries) {
+                const { height } = entry.contentRect
+                window.parent.postMessage({ type: 'update-height', data: height }, '*')
+            }
+        })
+        resizeObserver.observe(document.documentElement)
+    }
+
     return extension
 }
