@@ -27,5 +27,6 @@ export * from "./scene-builder/index.js";
 export * from "./socket/index.js";
 export * from "./subscription/index.js";
 export * from "./support/index.js";
+export * from "./dashboard/index.js";
 export * from "./vue/index.js";
 export * from "./types.js";
