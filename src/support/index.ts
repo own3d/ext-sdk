@@ -43,6 +43,11 @@ export interface CssProperties {
  * be used for inline styles in React/Vue/DOM. You can pass an optional
  * transformer map to run custom conversions per property.
  *
+ * If `font-color` is a CSS gradient (e.g. `linear-gradient(...)`) the returned
+ * style renders gradient text via `background-clip: text`, setting `color` to
+ * `transparent`. Apply the result to a text-only element; `currentColor`-based
+ * children (icons) then need their own explicit color.
+ *
  * @param fontSettings - Partial font settings received from the extension.
  * @param transformer - Optional converter functions applied per property.
  * @returns A plain object mapping CSS property names to values.
@@ -96,6 +101,19 @@ export function textStyle(
             style[modifierKey] = value ? value : modifier.default;
         }
     });
+
+    // A CSS gradient can't be used as a `color`; to render gradient text it has
+    // to be painted as a background and clipped to the glyphs. Solid colors are
+    // left untouched, so this is transparent to existing callers. Note: the
+    // returned style makes `color` transparent, so any non-text descendants
+    // that rely on `currentColor` (icons, etc.) need their own explicit color.
+    if (typeof style.color === "string" && style.color.includes("gradient")) {
+        style.backgroundImage = style.color;
+        style.backgroundClip = "text";
+        style.WebkitBackgroundClip = "text";
+        style.color = "transparent";
+        style.WebkitTextFillColor = "transparent";
+    }
 
     return style;
 }
